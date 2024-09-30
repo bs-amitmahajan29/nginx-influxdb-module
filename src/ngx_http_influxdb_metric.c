@@ -94,22 +94,18 @@ ngx_int_t ngx_http_influxdb_metric_push(ngx_pool_t *pool,
   ngx_buf_t *buf = create_temp_char_buf(pool, line_size);
 
   (void)ngx_sprintf(buf->last,
-                    "%V,server_name=%V "
-                    "%Vmethod=\"%V\",status=%i,bytes_sent=%O,body_"
-                    "bytes_sent=%O,header_"
-                    "bytes_sent=%z,request_length=%O,uri=\"%V\",extension=\"%"
-                    "V\",content_type=\"%V\",request_time=%V",
-                    &measurement, &m->server_name, &dynamic_fields, &m->method,
-                    m->status, m->bytes_sent, m->body_bytes_sent,
-                    m->header_bytes_sent, m->request_length, &m->uri,
-                    &m->extension, &m->content_type, &m->request_time);
+                  "%V,server_name=%V,uri=%V,method=%V,status=%i,content_type=%V request_time=%V,%V",
+                  &measurement, &m->server_name, &m->uri, &m->method, m->status, &m->content_type,
+                  &m->request_time, &dynamic_fields);
 
   struct sockaddr_in servaddr;
+  istruct sockaddr_in servaddr;
+  struct hostent *host_name; 
   int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   bzero(&servaddr, sizeof(servaddr));
-
+  host_name = gethostbyname((const char *)host.data);
   servaddr.sin_family = AF_INET;
-  servaddr.sin_addr.s_addr = ngx_inet_addr(host.data, host.len);
+  memcpy(&servaddr.sin_addr, host_name->h_addr, host_name->h_length); 
   servaddr.sin_port = htons(port);
 
   ssize_t sentlen =
