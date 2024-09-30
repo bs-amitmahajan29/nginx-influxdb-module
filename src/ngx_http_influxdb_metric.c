@@ -94,7 +94,7 @@ ngx_int_t ngx_http_influxdb_metric_push(ngx_pool_t *pool,
   ngx_buf_t *buf = create_temp_char_buf(pool, line_size);
 
   (void)ngx_sprintf(buf->last,
-                    "%V,server_name=%V,uri=\"%V\",method=\"%V\",status=%i,content_type=\"%V\" request_time=%V",
+                    "%V,server_name=%V,uri=%V,method=%V,status=%i,content_type=%V request_time=%V",
                     &measurement, &m->server_name, &m->uri, &m->method, m->status, &m->content_type, &m->request_time);
 
   struct sockaddr_in servaddr;
