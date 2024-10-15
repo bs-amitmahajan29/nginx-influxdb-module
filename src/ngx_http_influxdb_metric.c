@@ -99,8 +99,7 @@ ngx_int_t ngx_http_influxdb_metric_push(ngx_pool_t *pool,
                   &m->request_time, &dynamic_fields);
 
   struct sockaddr_in servaddr;
-  istruct sockaddr_in servaddr;
-  struct hostent *host_name; 
+  struct hostent *host_name;
   int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   bzero(&servaddr, sizeof(servaddr));
   host_name = gethostbyname((const char *)host.data);
